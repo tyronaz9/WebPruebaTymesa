@@ -26,24 +26,7 @@ namespace WebPruebaTymesa.Controllers
 
     
 
-       /* public async Task<IActionResult> Indexx(string Tabla, DateTime Fechai, DateTime Fechaf)
-        {
-            var applicationDbContext = _context.dto.Include(m => m.Cuentas).Include(m => m.Tipos).Include(m => m.Cuentas.Clientes).Where(c => c.Fecha.Date >= Fechai && c.Fecha.Date <= Fechaf.Date).OrderBy(c => c.Fecha);
-
-
-            if (!string.IsNullOrEmpty(Tabla))
-            {
-                foreach (var item in Tabla.Split(new char[] { ' ' },
-                         StringSplitOptions.RemoveEmptyEntries))
-                {
-                    applicationDbContext = applicationDbContext.Where(x => x.Cuentas.Clientes.Nombre.Contains(item))
-                        .OrderBy(c => c.Cuentas.Clientes.Nombre).ThenBy(c => c.Fecha);
-
-                }
-            }
-            return View(await applicationDbContext.ToListAsync());
-
-        }*/
+       
 
         public ActionResult Index(string Tabla,string Operacion,string Usuario ,DateTime Fechai, DateTime Fechaf)
         {
@@ -68,9 +51,22 @@ namespace WebPruebaTymesa.Controllers
                     //Read the next line
                     line = sr.ReadLine();
                     if (line != null) {
+
+                        char[] delimiterChars = { '\t' };
+
+                        string text = line;
+                        string[] words = text.Split(delimiterChars);
+                       
+
+                        foreach (var word in words)
+                        {
+                            System.Console.WriteLine($"<{word}>");
+                        }
+
                         var _dato = new DtoArchivo()
                         {
-                            Dato = line
+                            Dato = line,
+                            Fecha = Convert.ToDateTime(words[0]),
                         };
 
 
@@ -91,6 +87,9 @@ namespace WebPruebaTymesa.Controllers
                 Console.WriteLine("Executing finally block.");
             }
 
+            //   _datos = _datos.Where(c => c.Fecha.Date >= Fechai && c.Fecha.Date <= Fechaf.Date);
+            _datos = _datos.Where(c => c.Fecha.Date >= Fechai && c.Fecha.Date <= Fechaf.Date).ToList();
+          
             if (!string.IsNullOrEmpty(Tabla))
             {
                 foreach (var item in Tabla.Split(new char[] { ' ' },
