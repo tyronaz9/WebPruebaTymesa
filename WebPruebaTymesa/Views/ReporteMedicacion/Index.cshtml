@@ -1,0 +1,161 @@
+﻿@model WebPruebaTymesa.Models.PaginadorGenerico<WebPruebaTymesa.Models.SP_F_ReporteMedicinas>
+
+@{
+    ViewData["Title"] = "Reporte Medicina";
+}
+
+<h1>Reporte Medicina</h1>
+
+@*<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NombrePaciente)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefono)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Medicina)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaIni)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaFin)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombrePaciente)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telefono)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Medicina)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaIni)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaFin)
+                </td>
+
+
+            </tr>
+        }
+    </tbody>
+</table>*@
+
+
+<table class="table">
+    <tr>
+        <th>
+            NombrePaciente
+        </th>
+        <th>
+            Telefono
+        </th>
+
+        <th>
+            Medicina
+        </th>
+        <th>
+            FechaIni
+        </th>
+
+        <th>
+            FechaIni
+        </th>
+        
+        <th></th>
+    </tr>
+
+
+    @foreach (var item in Model.Resultado)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombrePaciente)
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefono)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Medicina)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaIni)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaFin)
+            </td>
+           
+         
+        </tr>
+    }
+
+
+</table>
+@*CÓDIGO PARA EL PAGINADOR DE REGISTROS*@
+@if (Model.Resultado.Count() > 0)
+{
+    <span>
+        <strong>@Model.TotalRegistros</strong> registros encontrados
+    </span>
+    <span>&nbsp;|&nbsp;</span>
+    <span>
+        Página <strong>@(Model.PaginaActual)</strong> de
+        <strong>@Model.TotalPaginas</strong>
+    </span>
+    <span>&nbsp;|&nbsp;</span>
+}
+else
+{
+    <span>No hay resultados para esta búsqueda</span>
+    <span>&nbsp;|&nbsp;</span>
+}
+
+@if (Model.PaginaActual > 1)
+{
+    @Html.ActionLink("<<", "Index", new { pagina = 1 },
+                    new { @class = "btn btn-sm btn-default" })
+    <span></span>
+    @Html.ActionLink("Anterior", "Index", new { pagina = Model.PaginaActual - 1 },
+                    new { @class = "btn btn-sm btn-default" })
+}
+else
+{
+    @Html.ActionLink("<<", "Index", new { pagina = 1 },
+                    new { @class = "btn btn-sm btn-default disabled" })
+    <span></span>
+    @Html.ActionLink("Anterior", "Index", new { pagina = 1 },
+                    new { @class = "btn btn-sm btn-default disabled" })
+}
+<span></span>
+@if (Model.PaginaActual < Model.TotalPaginas)
+{
+    @Html.ActionLink("Siguiente", "Index", new { pagina = Model.PaginaActual + 1 },
+                    new { @class = "btn btn-sm btn-default" })
+    <span></span>
+    @Html.ActionLink(">>", "Index", new { pagina = Model.TotalPaginas },
+                    new { @class = "btn btn-sm btn-default" })
+}
+else
+{
+    @Html.ActionLink("Siguiente", "Index", new { pagina = Model.TotalPaginas - 1 },
+                    new { @class = "btn btn-sm btn-default disabled" })
+    <span></span>
+    @Html.ActionLink(">>", "Index", new { pagina = Model.TotalPaginas },
+                    new { @class = "btn btn-sm btn-default disabled" })
+}

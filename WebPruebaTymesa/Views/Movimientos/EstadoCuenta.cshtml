@@ -1,0 +1,159 @@
+﻿@model IEnumerable<WebPruebaTymesa.Models.Movimientos>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Estado de Cuenta</h3>
+
+
+@{
+    string format = "dd/MM/yyyy HH:mm:ss";
+    var now = DateTime.Now.ToString(format);
+    float Saldo = 0;
+    float Debitos = 0;
+    float Creditos = 0;
+}
+
+
+
+
+@*CÓDIGO PARA EL FILTRO DE BÚSQUEDA*@
+<div class="text-right form-inline">
+    <form method="get" action=@Url.Action("EstadoCuenta", "Movimientos" )>
+        <div class="row" align="right">
+
+            <div class="form-group">
+                @Html.TextBox("buscar", null, new
+                {
+                    placeholder = "texto de búsqueda",
+                                        @class = "form-control"
+                })
+            </div>
+
+
+            <div class="form-group">
+                <label>Desde</label>
+                @Html.TextBox("Fechai", now, new
+                {
+
+                    placeholder = "Fecha Inicial",
+                    @class = "form-control",
+                    @type = "date",
+                })
+            </div>
+
+            <div class="form-group">
+                <label>Hasta</label>
+                @Html.TextBox("Fechaf", now, new
+                {
+
+                    placeholder = "Fecha Final",
+                    @class = "form-control",
+                    @type = "date",
+                })
+            </div>
+
+
+            <button class="btn-outline-info" type="submit">Buscar</button>
+        </div>
+    </form>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Cuentas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tipos)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Valor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cuentas.Clientes.Nombre)
+            </th>
+            <th></th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fecha)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cuentas.Numero)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tipos.Sigla)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Valor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cuentas.Clientes.Nombre)
+                </td>
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@item.MovimientosID">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.MovimientosID">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.MovimientosID">Delete</a>*@
+                </td>
+            </tr>
+            if (item.Tipos.Signo == 1)
+            {
+                Debitos += item.Valor;
+            }
+            else
+            {
+                Creditos += item.Valor;
+            }
+
+            Saldo += item.Valor * item.Tipos.Signo;
+        }
+    </tbody>
+    <tfoot>
+        @*<tr>
+            <th>Debitos</th>
+            <th>@Debitos</th>
+            <th>Credito</th>
+            <th>@Creditos</th>
+            <th>Saldo</th>
+            <th align="right">@Saldo.ToString("$###,###.00")</th>
+        </tr>*@
+
+    </tfoot>
+</table>
+<div class="row">
+    <div class="col-md-2">Débitos</div>
+    <div class="col-md-2">@Debitos.ToString("$###,###.00")</div>
+    <div class="col-md-2">Crébitos</div>
+    <div class="col-md-2">@Creditos.ToString("$###,###.00")</div>
+    <div class="col-md-2">Saldo Final</div>
+    <div class="col-md-2">@Saldo.ToString("$###,###.00")</div>
+</div>
+
+
+
+@section scripts {
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#datepicker').datetimepicker({ format: 'YYYY/MM/DD' });
+
+
+        });
+
+
+    </script>
+}
